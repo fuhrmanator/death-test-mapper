@@ -1,0 +1,82 @@
+@startdot
+digraph map {
+  // Left to right orientation
+  rankdir="RL";
+  
+  // Use undirected edges to avoid implying one-way paths
+  edge [dir=none];
+
+  // Define start and end nodes
+  node [style=filled, fontcolor=black, shape=circle];
+  Start [label="Start"];
+  End [label="End"];
+  
+  // Node styles - same colors as your PlantUML diagram
+  node [style=filled, fontcolor=white, shape=parallelogram];
+  
+  // Define regular room nodes with colors
+  RedRoom [label="Red Room", fillcolor="#FF0000"];
+  BlueRoom [label="Blue Room", fillcolor="#0000FF"];
+  GreenRoom [label="Green Room", fillcolor="#00FF00", fontcolor=black];
+  GoldRoom [label="Gold Room", fillcolor="#FFD700", fontcolor=black];
+  SilverRoom [label="Silver Room", fillcolor="#C0C0C0", fontcolor=black];
+  YellowRoom [label="Yellow Room", fillcolor="#FFFF00", fontcolor=black];
+  OrangeRoom [label="Orange Room", fillcolor="#FFA500", fontcolor=black];
+  WhiteRoom [label="White Room", fillcolor="#FFFFFF", fontcolor=black];
+  BlackRoom [label="Black Room", fillcolor="#444444"];
+  CopperRoom [label="Copper Room", fillcolor="#B87333"];
+  BrownRoom [label="Brown Room", fillcolor="#A52A2A"];
+  AzureRoom [label="Azure Room", fillcolor="#007FFF"];
+  VioletRoom [label="Violet Room", fillcolor="#8A2BE2"];
+  
+  // Define junction/intersection nodes
+  node [shape=circle, width=0.1, height=0.1, label="", style="filled", fillcolor="#dddddd"];
+  Junction1 [label=""];  // 4-way after Red Room
+  Junction2 [label=""];  // 3-way after Blue/Green
+  Junction3 [label=""];  // 3-way after Gold
+  Junction4 [label=""];  // 3-way after Silver/Yellow
+  Junction5 [label=""];  // Final junction before Violet
+  
+  // Start node should be on the left
+  { rank=min; Start; }
+
+  Start -> RedRoom;
+  
+  // Define connections using junctions for intersections
+  RedRoom -> Junction1;
+  Junction1 -> BlueRoom;
+  Junction1 -> GoldRoom;
+  Junction1 -> SilverRoom;
+  
+  BlueRoom -> GreenRoom;
+  GreenRoom -> Junction2;
+  Junction2 -> OrangeRoom;
+  Junction2 -> Junction3;
+  
+  GoldRoom -> Junction3;
+  Junction3 -> BlackRoom;
+  Junction3 -> Junction4;
+
+  // Force J2, J3, J4 to be aligned vertically
+  { rank=same; Junction2; Junction3; Junction4; }
+  
+  SilverRoom -> YellowRoom;
+  YellowRoom -> Junction4;
+  Junction4 -> CopperRoom;
+  
+  OrangeRoom -> WhiteRoom;
+  CopperRoom -> BrownRoom;
+  
+  WhiteRoom -> Junction5;
+  BlackRoom -> Junction5;
+  BrownRoom -> Junction5;
+  Junction5 -> AzureRoom;
+  
+  AzureRoom -> VioletRoom;
+
+  VioletRoom -> End;
+  
+  // End node should be on the right
+  { rank=max; End; }
+}
+@enddot

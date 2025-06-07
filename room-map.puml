@@ -1,0 +1,26 @@
+@startuml Death Test Room Map
+start
+#red:Red Room;
+split
+    #blue:Blue Room;
+    #green:Green Room;
+split again
+    #gold:Gold Room;
+split again
+    #silver:Silver Room;
+    #yellow:Yellow Room;
+end split
+split
+    #orange:Orange Room;
+    #white:White Room;
+split again
+    #444444:Black Room;
+split again
+    #886333:Copper Room;
+    #brown:Brown Room;
+end split
+#skyblue:Azure Room;
+#violet:Violet Room;
+end
+
+@enduml
