@@ -1,22 +1,25 @@
 @startdot
 digraph map {
+  // Set default font for the entire graph
+  fontname="Helvetica";
+  
   // Left to right orientation
   rankdir="RL";
   
   // Use undirected edges to avoid implying one-way paths
-  edge [dir=none];
+  edge [dir=none, fontname="Helvetica"];
 
   // Define start and end nodes
-  node [style=filled, fontcolor=black, shape=circle];
+  node [style=filled, fontcolor=black, shape=circle, fontname="Helvetica"];
   Start [label="Start"];
   End [label="End"];
   
   // Node styles - same colors as your PlantUML diagram
-  node [style=filled, fontcolor=white, shape=parallelogram];
+  node [style=filled, fontcolor=white, shape=parallelogram, fontname="Helvetica"];
   
   // Define regular room nodes with colors
   RedRoom [label="Red Room", fillcolor="#FF0000"];
-  BlueRoom [label="Blue Room", fillcolor="#0000FF"];
+  IndigoRoom [label="Indigo Room", fillcolor="Indigo", fontcolor=white];
   GreenRoom [label="Green Room", fillcolor="#00FF00", fontcolor=black];
   GoldRoom [label="Gold Room", fillcolor="#FFD700", fontcolor=black];
   SilverRoom [label="Silver Room", fillcolor="#C0C0C0", fontcolor=black];
@@ -32,7 +35,7 @@ digraph map {
   // Define junction/intersection nodes
   node [shape=circle, width=0.1, height=0.1, label="", style="filled", fillcolor="#dddddd"];
   Junction1 [label=""];  // 4-way after Red Room
-  Junction2 [label=""];  // 3-way after Blue/Green
+  Junction2 [label=""];  // 3-way after Indigo/Green
   Junction3 [label=""];  // 3-way after Gold
   Junction4 [label=""];  // 3-way after Silver/Yellow
   Junction5 [label=""];  // Final junction before Violet
@@ -44,11 +47,11 @@ digraph map {
   
   // Define connections using junctions for intersections
   RedRoom -> Junction1;
-  Junction1 -> BlueRoom;
+  Junction1 -> IndigoRoom;
   Junction1 -> GoldRoom;
   Junction1 -> SilverRoom;
   
-  BlueRoom -> GreenRoom;
+  IndigoRoom -> GreenRoom;
   GreenRoom -> Junction2;
   Junction2 -> OrangeRoom;
   Junction2 -> Junction3;
