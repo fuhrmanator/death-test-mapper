@@ -245,57 +245,190 @@ function generateHtmlVisualization(graph: Graph): string {
     }
   }
 
-  // Create HTML with embedded Cytoscape.js - with more robust script loading
+  // Stringify the graph data
+  const nodesJSON = JSON.stringify(nodes);
+  const edgesJSON = JSON.stringify(edges);
+
   return `<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Dungeon Map Visualization</title>
-  <!-- Load Cytoscape directly -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Death Test Dungeon Map</title>
+  <!-- Use a simpler approach with just Cytoscape - no separate plugins -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
   <style>
-    /* Your existing styles */
+    body { 
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #cy { 
+      width: 100%; 
+      height: 85vh; 
+      display: block; 
+    }
+    .controls {
+      padding: 10px;
+      background: #f5f5f5;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .color-box {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #999;
+    }
+    #message {
+      padding: 20px;
+      background-color: #f8d7da;
+      color: #721c24;
+      margin: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    #loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      font-family: Arial, sans-serif;
+    }
+    #cy-container {
+      position: relative;
+      height: 85vh;
+    }
   </style>
 </head>
 <body>
   <div class="controls">
-    <!-- Your existing controls -->
+    <h1>Death Test Dungeon Map</h1>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="color-box" style="background-color: red;"></div>
+        <span>Dead End</span>
+      </div>
+      <div class="legend-item">
+        <div class="color-box" style="background-color: orange;"></div>
+        <span>Unreachable</span>
+      </div>
+      <div class="legend-item">
+        <div class="color-box" style="background-color: lightblue;"></div>
+        <span>Single Entry</span>
+      </div>
+    </div>
   </div>
+  
+  <div id="message">
+    If you're seeing this message, there was a problem loading the visualization. 
+    Please try downloading this file and opening it directly in your browser.
+  </div>
+  
   <div id="cy-container">
     <div id="loading">Loading visualization...</div>
     <div id="cy"></div>
   </div>
-  
+
   <script>
-    // Store graph data as a global variable
-    window.graphElements = {
-      nodes: ${JSON.stringify(nodes)},
-      edges: ${JSON.stringify(edges)}
-    };
-    
-    // Initialize visualization when page loads
-    window.onload = function() {
-      // Check if Cytoscape loaded
-      if (typeof cytoscape === 'undefined') {
-        document.getElementById('loading').innerHTML = 
-          'Error: Cytoscape library failed to load. Please download this file and open it locally.';
-        return;
+    // Check if Cytoscape loaded
+    if (typeof cytoscape === 'undefined') {
+      document.getElementById('message').style.display = 'block';
+      document.getElementById('loading').innerHTML = 'Error: Cytoscape library failed to load';
+      console.error('Cytoscape library not loaded');
+    } else {
+      try {
+        // Define the graph data
+        const nodes = ${nodesJSON};
+        const edges = ${edgesJSON};
+        
+        window.addEventListener('DOMContentLoaded', function() {
+          try {
+            // Hide loading message
+            document.getElementById('loading').style.display = 'none';
+            
+            // Initialize Cytoscape with a simpler layout
+            const cy = cytoscape({
+              container: document.getElementById('cy'),
+              elements: {
+                nodes: nodes,
+                edges: edges
+              },
+              style: [
+                {
+                  selector: 'node',
+                  style: {
+                    'label': 'data(label)',
+                    'background-color': '#666',
+                    'color': '#fff',
+                    'text-valign': 'center',
+                    'text-halign': 'center',
+                    'width': '40px',
+                    'height': '40px',
+                    'font-size': '12px'
+                  }
+                },
+                {
+                  selector: 'edge',
+                  style: {
+                    'width': 2,
+                    'line-color': '#999',
+                    'target-arrow-color': '#999',
+                    'target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                  }
+                },
+                {
+                  selector: '.deadEnd',
+                  style: {
+                    'background-color': 'red'
+                  }
+                },
+                {
+                  selector: '.unreachable',
+                  style: {
+                    'background-color': 'orange'
+                  }
+                },
+                {
+                  selector: '.singleEntry',
+                  style: {
+                    'background-color': 'lightblue'
+                  }
+                }
+              ],
+              layout: {
+                name: 'breadthfirst',
+                directed: true,
+                roots: nodes.length > 0 ? [nodes[0].data.id] : undefined,
+                padding: 30,
+                spacingFactor: 1.5,
+                animate: false
+              }
+            });
+            
+            console.log('Cytoscape visualization initialized successfully');
+          } catch (error) {
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('loading').innerHTML = 'Error initializing visualization';
+            console.error('Error initializing Cytoscape:', error);
+          }
+        });
+      } catch (error) {
+        document.getElementById('message').style.display = 'block';
+        document.getElementById('loading').innerHTML = 'Error processing graph data';
+        console.error('Error in graph data processing:', error);
       }
-      
-      // Hide loading message
-      document.getElementById('loading').style.display = 'none';
-      
-      // Initialize Cytoscape
-      const cy = cytoscape({
-        container: document.getElementById('cy'),
-        elements: window.graphElements,
-        style: [
-          // Your existing style definitions
-        ],
-        layout: {
-          // Your existing layout options
-        }
-      });
-    };
+    }
   </script>
 </body>
 </html>`;
