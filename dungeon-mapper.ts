@@ -214,7 +214,6 @@ function generateDotFile(graph: Graph): string {
   return dotContent;
 }
 
-// Generate HTML with embedded visualization using Cytoscape.js
 function generateHtmlVisualization(graph: Graph): string {
   const deadEnds = new Set(findDeadEnds(graph));
   const singleEntry = new Set(findSingleEntryNodes(graph));
@@ -233,7 +232,7 @@ function generateHtmlVisualization(graph: Graph): string {
     };
   });
 
-  const edges: Array<{ data: { id: string; source: string; target: string } }> = [];
+  const edges = [];
   for (const node of graph.nodes.values()) {
     for (const targetId of node.outgoingEdges) {
       edges.push({
@@ -246,12 +245,11 @@ function generateHtmlVisualization(graph: Graph): string {
     }
   }
 
-  // Create HTML with embedded Cytoscape.js
+  // Create HTML with embedded Cytoscape.js - with more robust script loading
   return `<!DOCTYPE html>
 <html>
 <head>
   <title>Dungeon Map Visualization</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
   <style>
     #cy { 
       width: 100%; 
@@ -276,6 +274,18 @@ function generateHtmlVisualization(graph: Graph): string {
       width: 20px;
       height: 20px;
     }
+    #loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      font-family: Arial, sans-serif;
+    }
+    #cy-container {
+      position: relative;
+      height: 85vh;
+    }
   </style>
 </head>
 <body>
@@ -296,82 +306,109 @@ function generateHtmlVisualization(graph: Graph): string {
       </div>
     </div>
   </div>
-  <div id="cy"></div>
+  <div id="cy-container">
+    <div id="loading">Loading visualization...</div>
+    <div id="cy"></div>
+  </div>
   
   <script>
-    const elements = {
+    // Store the graph data
+    const graphElements = {
       nodes: ${JSON.stringify(nodes)},
       edges: ${JSON.stringify(edges)}
     };
     
-    const cy = cytoscape({
-      container: document.getElementById('cy'),
-      elements: elements,
-      style: [
-        {
-          selector: 'node',
-          style: {
-            'label': 'data(label)',
-            'background-color': '#666',
-            'color': '#fff',
-            'text-valign': 'center',
-            'text-halign': 'center',
-            'width': '40px',
-            'height': '40px',
-            'font-size': '12px'
+    // Function to load script and initialize Cytoscape
+    function loadCytoscape() {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js';
+      script.integrity = 'sha512-gEWKnYYa1/1c3jOuT9PR7NxiVI1bwn02DeJGsl+lMVQ1fWMNvtjkjxIApTdbJ/wcDjQmbf+McWahXwipdC9dGA==';
+      script.crossOrigin = 'anonymous';
+      script.referrerPolicy = 'no-referrer';
+      
+      script.onload = function() {
+        // Hide loading message
+        document.getElementById('loading').style.display = 'none';
+        
+        // Initialize Cytoscape
+        const cy = cytoscape({
+          container: document.getElementById('cy'),
+          elements: graphElements,
+          style: [
+            {
+              selector: 'node',
+              style: {
+                'label': 'data(label)',
+                'background-color': '#666',
+                'color': '#fff',
+                'text-valign': 'center',
+                'text-halign': 'center',
+                'width': '40px',
+                'height': '40px',
+                'font-size': '12px'
+              }
+            },
+            {
+              selector: 'edge',
+              style: {
+                'width': 2,
+                'line-color': '#999',
+                'target-arrow-color': '#999',
+                'target-arrow-shape': 'triangle',
+                'curve-style': 'bezier'
+              }
+            },
+            {
+              selector: '.deadEnd',
+              style: {
+                'background-color': 'red'
+              }
+            },
+            {
+              selector: '.unreachable',
+              style: {
+                'background-color': 'orange'
+              }
+            },
+            {
+              selector: '.singleEntry',
+              style: {
+                'background-color': 'lightblue'
+              }
+            }
+          ],
+          layout: {
+            name: 'cose',
+            nodeDimensionsIncludeLabels: true,
+            randomize: true,
+            componentSpacing: 100,
+            nodeRepulsion: 6000,
+            nodeOverlap: 20,
+            idealEdgeLength: 100,
+            edgeElasticity: 100,
+            nestingFactor: 5,
+            gravity: 80,
+            numIter: 1000,
+            initialTemp: 200,
+            coolingFactor: 0.95,
+            minTemp: 1.0
           }
-        },
-        {
-          selector: 'edge',
-          style: {
-            'width': 2,
-            'line-color': '#999',
-            'target-arrow-color': '#999',
-            'target-arrow-shape': 'triangle',
-            'curve-style': 'bezier'
-          }
-        },
-        {
-          selector: '.deadEnd',
-          style: {
-            'background-color': 'red'
-          }
-        },
-        {
-          selector: '.unreachable',
-          style: {
-            'background-color': 'orange'
-          }
-        },
-        {
-          selector: '.singleEntry',
-          style: {
-            'background-color': 'lightblue'
-          }
-        }
-      ],
-      layout: {
-        name: 'cose',
-        nodeDimensionsIncludeLabels: true,
-        randomize: true,
-        componentSpacing: 100,
-        nodeRepulsion: 6000,
-        nodeOverlap: 20,
-        idealEdgeLength: 100,
-        edgeElasticity: 100,
-        nestingFactor: 5,
-        gravity: 80,
-        numIter: 1000,
-        initialTemp: 200,
-        coolingFactor: 0.95,
-        minTemp: 1.0
-      }
-    });
+        });
+      };
+      
+      script.onerror = function() {
+        document.getElementById('loading').innerHTML = 'Error loading visualization library. Please try a different browser or download the file to view locally.';
+      };
+      
+      document.head.appendChild(script);
+    }
+    
+    // Initialize when the page loads
+    window.onload = loadCytoscape;
   </script>
 </body>
 </html>`;
 }
-
 // Save analysis results to a file
 function saveAnalysisResults(graph: Graph, filePath: string): void {
   const deadEnds = findDeadEnds(graph);
