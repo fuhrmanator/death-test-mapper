@@ -1,0 +1,25 @@
+{
+  "name": "death-test-mapper",
+  "version": "1.0.0",
+  "description": "Code that creates a graph from the steps in a Death Test module.",
+  "homepage": "https://github.com/fuhrmanator/death-test-mapper#readme",
+  "bugs": {
+    "url": "https://github.com/fuhrmanator/death-test-mapper/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fuhrmanator/death-test-mapper.git"
+  },
+  "license": "MIT",
+  "author": "C. Fuhrman",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
