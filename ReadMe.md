@@ -19,7 +19,7 @@ There are two main visualizations generated:
 2. **Room Map**: A detailed map of the rooms, showing how they connect to each other. This was created manually using PlantUML/GraphViz for clarity.
 
 <details>
-<summary><b>Spoiler (click to see the map)</b></summary>
+<summary><b>Spoiler (click to see the maps)</b></summary>
 
 <!-- Once you generate the SVG/PNG files, place them here -->
 <div>
@@ -33,7 +33,7 @@ There are two main visualizations generated:
   
   <!-- If you have the room map specifically -->
   <p>Room Connections:</p>
-  <img src="output/room-map.svg" alt="Death Test Room Connections" width="100%">
+  <img src="output/room-map-dot.svg" alt="Death Test Room Connections" width="100%">
 </div>
 
 </details>
