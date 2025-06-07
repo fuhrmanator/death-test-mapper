@@ -2,61 +2,15 @@
 <html>
 <head>
   <title>Dungeon Map Visualization</title>
+  <!-- Load Cytoscape directly -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
   <style>
-    #cy { 
-      width: 100%; 
-      height: 85vh; 
-      display: block; 
-    }
-    .controls {
-      padding: 10px;
-      background: #f5f5f5;
-    }
-    .legend {
-      display: flex;
-      gap: 20px;
-      margin-top: 10px;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .color-box {
-      width: 20px;
-      height: 20px;
-    }
-    #loading {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 24px;
-      font-family: Arial, sans-serif;
-    }
-    #cy-container {
-      position: relative;
-      height: 85vh;
-    }
+    /* Your existing styles */
   </style>
 </head>
 <body>
   <div class="controls">
-    <h1>Dungeon Map</h1>
-    <div class="legend">
-      <div class="legend-item">
-        <div class="color-box" style="background-color: red;"></div>
-        <span>Dead End</span>
-      </div>
-      <div class="legend-item">
-        <div class="color-box" style="background-color: orange;"></div>
-        <span>Unreachable</span>
-      </div>
-      <div class="legend-item">
-        <div class="color-box" style="background-color: lightblue;"></div>
-        <span>Single Entry</span>
-      </div>
-    </div>
+    <!-- Your existing controls -->
   </div>
   <div id="cy-container">
     <div id="loading">Loading visualization...</div>
@@ -64,99 +18,36 @@
   </div>
   
   <script>
-    // Store the graph data
-    const graphElements = {
+    // Store graph data as a global variable
+    window.graphElements = {
       nodes: [{"data":{"id":"node_1","label":"1"},"classes":""},{"data":{"id":"node_2","label":"2"},"classes":""},{"data":{"id":"node_3","label":"3"},"classes":""},{"data":{"id":"node_4","label":"4"},"classes":""},{"data":{"id":"node_5","label":"5"},"classes":""},{"data":{"id":"node_6","label":"6"},"classes":""},{"data":{"id":"node_7","label":"7"},"classes":""},{"data":{"id":"node_8","label":"8"},"classes":""},{"data":{"id":"node_9","label":"9"},"classes":""},{"data":{"id":"node_10","label":"10"},"classes":""},{"data":{"id":"node_11","label":"11"},"classes":""},{"data":{"id":"node_12","label":"12"},"classes":""},{"data":{"id":"node_13","label":"13"},"classes":""},{"data":{"id":"node_14","label":"14"},"classes":"singleEntry"},{"data":{"id":"node_15","label":"15"},"classes":"singleEntry"},{"data":{"id":"node_16","label":"16"},"classes":""},{"data":{"id":"node_17","label":"17"},"classes":""},{"data":{"id":"node_18","label":"18"},"classes":""},{"data":{"id":"node_19","label":"19"},"classes":""},{"data":{"id":"node_20","label":"20"},"classes":""},{"data":{"id":"node_21","label":"21"},"classes":"singleEntry"},{"data":{"id":"node_22","label":"22"},"classes":"singleEntry"},{"data":{"id":"node_23","label":"23"},"classes":"singleEntry"},{"data":{"id":"node_24","label":"24"},"classes":""},{"data":{"id":"node_25","label":"25"},"classes":"singleEntry"},{"data":{"id":"node_26","label":"26"},"classes":"singleEntry"},{"data":{"id":"node_27","label":"27"},"classes":"singleEntry"},{"data":{"id":"node_28","label":"28"},"classes":"singleEntry"},{"data":{"id":"node_29","label":"29"},"classes":""},{"data":{"id":"node_30","label":"30"},"classes":""},{"data":{"id":"node_31","label":"31"},"classes":""},{"data":{"id":"node_32","label":"32"},"classes":""},{"data":{"id":"node_33","label":"33"},"classes":"singleEntry"},{"data":{"id":"node_34","label":"34"},"classes":"singleEntry"},{"data":{"id":"node_35","label":"35"},"classes":""},{"data":{"id":"node_36","label":"36"},"classes":"singleEntry"},{"data":{"id":"node_37","label":"37"},"classes":"singleEntry"},{"data":{"id":"node_38","label":"38"},"classes":""},{"data":{"id":"node_39","label":"39"},"classes":"singleEntry"},{"data":{"id":"node_40","label":"40"},"classes":""},{"data":{"id":"node_41","label":"41"},"classes":""},{"data":{"id":"node_42","label":"42"},"classes":""},{"data":{"id":"node_43","label":"43"},"classes":"singleEntry"},{"data":{"id":"node_44","label":"44"},"classes":""},{"data":{"id":"node_45","label":"45"},"classes":""},{"data":{"id":"node_46","label":"46"},"classes":""},{"data":{"id":"node_47","label":"47"},"classes":"singleEntry"},{"data":{"id":"node_48","label":"48"},"classes":""},{"data":{"id":"node_49","label":"49"},"classes":"singleEntry"},{"data":{"id":"node_50","label":"50"},"classes":""},{"data":{"id":"node_51","label":"51"},"classes":"unreachable"},{"data":{"id":"node_52","label":"52"},"classes":"singleEntry"},{"data":{"id":"node_53","label":"53"},"classes":"singleEntry"},{"data":{"id":"node_54","label":"54"},"classes":"singleEntry"},{"data":{"id":"node_55","label":"55"},"classes":"singleEntry"},{"data":{"id":"node_56","label":"56"},"classes":"deadEnd"},{"data":{"id":"node_57","label":"57"},"classes":""},{"data":{"id":"node_58","label":"58"},"classes":"singleEntry"},{"data":{"id":"node_59","label":"59"},"classes":""},{"data":{"id":"node_60","label":"60"},"classes":""},{"data":{"id":"node_61","label":"61"},"classes":""},{"data":{"id":"node_62","label":"62"},"classes":"singleEntry"},{"data":{"id":"node_63","label":"63"},"classes":""},{"data":{"id":"node_64","label":"64"},"classes":"singleEntry"},{"data":{"id":"node_65","label":"65"},"classes":"singleEntry"},{"data":{"id":"node_66","label":"66"},"classes":""},{"data":{"id":"node_67","label":"67"},"classes":""},{"data":{"id":"node_68","label":"68"},"classes":"singleEntry"},{"data":{"id":"node_69","label":"69"},"classes":""},{"data":{"id":"node_70","label":"70"},"classes":"singleEntry"},{"data":{"id":"node_71","label":"71"},"classes":""},{"data":{"id":"node_72","label":"72"},"classes":"singleEntry"},{"data":{"id":"node_73","label":"73"},"classes":"singleEntry"},{"data":{"id":"node_74","label":"74"},"classes":""},{"data":{"id":"node_75","label":"75"},"classes":""},{"data":{"id":"node_76","label":"76"},"classes":""},{"data":{"id":"node_77","label":"77"},"classes":"deadEnd"},{"data":{"id":"node_78","label":"78"},"classes":"singleEntry"},{"data":{"id":"node_79","label":"79"},"classes":"singleEntry"},{"data":{"id":"node_80","label":"80"},"classes":"singleEntry"},{"data":{"id":"node_81","label":"81"},"classes":"singleEntry"},{"data":{"id":"node_82","label":"82"},"classes":""},{"data":{"id":"node_83","label":"83"},"classes":"singleEntry"},{"data":{"id":"node_84","label":"84"},"classes":""},{"data":{"id":"node_85","label":"85"},"classes":""},{"data":{"id":"node_86","label":"86"},"classes":""},{"data":{"id":"node_87","label":"87"},"classes":""},{"data":{"id":"node_88","label":"88"},"classes":""},{"data":{"id":"node_89","label":"89"},"classes":""},{"data":{"id":"node_90","label":"90"},"classes":""},{"data":{"id":"node_91","label":"91"},"classes":""},{"data":{"id":"node_92","label":"92"},"classes":""},{"data":{"id":"node_93","label":"93"},"classes":"singleEntry"},{"data":{"id":"node_94","label":"94"},"classes":"singleEntry"},{"data":{"id":"node_95","label":"95"},"classes":"singleEntry"},{"data":{"id":"node_96","label":"96"},"classes":""},{"data":{"id":"node_97","label":"97"},"classes":"singleEntry"},{"data":{"id":"node_98","label":"98"},"classes":"singleEntry"},{"data":{"id":"node_99","label":"99"},"classes":""},{"data":{"id":"node_100","label":"100"},"classes":""},{"data":{"id":"node_101","label":"101"},"classes":"singleEntry"},{"data":{"id":"node_102","label":"102"},"classes":"singleEntry"},{"data":{"id":"node_103","label":"103"},"classes":"singleEntry"},{"data":{"id":"node_104","label":"104"},"classes":"deadEnd"},{"data":{"id":"node_105","label":"105"},"classes":"singleEntry"},{"data":{"id":"node_106","label":"106"},"classes":"unreachable"},{"data":{"id":"node_107","label":"107"},"classes":"deadEnd"},{"data":{"id":"node_108","label":"108"},"classes":"singleEntry"},{"data":{"id":"node_109","label":"109"},"classes":""},{"data":{"id":"node_110","label":"110"},"classes":""},{"data":{"id":"node_111","label":"111"},"classes":""},{"data":{"id":"node_112","label":"112"},"classes":""},{"data":{"id":"node_113","label":"113"},"classes":""},{"data":{"id":"node_114","label":"114"},"classes":""},{"data":{"id":"node_115","label":"115"},"classes":""},{"data":{"id":"node_116","label":"116"},"classes":""},{"data":{"id":"node_117","label":"117"},"classes":"singleEntry"},{"data":{"id":"node_118","label":"118"},"classes":"singleEntry"},{"data":{"id":"node_119","label":"119"},"classes":"singleEntry"},{"data":{"id":"node_120","label":"120"},"classes":"singleEntry"},{"data":{"id":"node_121","label":"121"},"classes":""},{"data":{"id":"node_122","label":"122"},"classes":"singleEntry"},{"data":{"id":"node_123","label":"123"},"classes":""},{"data":{"id":"node_124","label":"124"},"classes":"singleEntry"},{"data":{"id":"node_125","label":"125"},"classes":"singleEntry"},{"data":{"id":"node_126","label":"126"},"classes":""},{"data":{"id":"node_127","label":"127"},"classes":""},{"data":{"id":"node_128","label":"128"},"classes":"deadEnd"},{"data":{"id":"node_129","label":"129"},"classes":""},{"data":{"id":"node_130","label":"130"},"classes":"singleEntry"},{"data":{"id":"node_131","label":"131"},"classes":""},{"data":{"id":"node_132","label":"132"},"classes":""},{"data":{"id":"node_133","label":"133"},"classes":""},{"data":{"id":"node_134","label":"134"},"classes":"singleEntry"},{"data":{"id":"node_135","label":"135"},"classes":""},{"data":{"id":"node_136","label":"136"},"classes":""},{"data":{"id":"node_137","label":"137"},"classes":"singleEntry"},{"data":{"id":"node_138","label":"138"},"classes":""},{"data":{"id":"node_139","label":"139"},"classes":"singleEntry"},{"data":{"id":"node_140","label":"140"},"classes":""},{"data":{"id":"node_141","label":"141"},"classes":"singleEntry"},{"data":{"id":"node_142","label":"142"},"classes":"singleEntry"},{"data":{"id":"node_143","label":"143"},"classes":""},{"data":{"id":"node_144","label":"144"},"classes":""},{"data":{"id":"node_145","label":"145"},"classes":""},{"data":{"id":"node_146","label":"146"},"classes":""},{"data":{"id":"node_147","label":"147"},"classes":"singleEntry"},{"data":{"id":"node_148","label":"148"},"classes":"singleEntry"},{"data":{"id":"node_149","label":"149"},"classes":""},{"data":{"id":"node_150","label":"150"},"classes":"singleEntry"},{"data":{"id":"node_151","label":"151"},"classes":"singleEntry"},{"data":{"id":"node_152","label":"152"},"classes":"deadEnd"},{"data":{"id":"node_153","label":"153"},"classes":"singleEntry"},{"data":{"id":"node_154","label":"154"},"classes":""},{"data":{"id":"node_155","label":"155"},"classes":""},{"data":{"id":"node_156","label":"156"},"classes":""},{"data":{"id":"node_157","label":"157"},"classes":""},{"data":{"id":"node_158","label":"158"},"classes":"singleEntry"},{"data":{"id":"node_159","label":"159"},"classes":""},{"data":{"id":"node_160","label":"160"},"classes":"deadEnd"},{"data":{"id":"node_161","label":"161"},"classes":""},{"data":{"id":"node_162","label":"162"},"classes":""},{"data":{"id":"node_163","label":"163"},"classes":"singleEntry"},{"data":{"id":"node_164","label":"164"},"classes":"singleEntry"},{"data":{"id":"node_165","label":"165"},"classes":"deadEnd"},{"data":{"id":"node_166","label":"166"},"classes":"singleEntry"},{"data":{"id":"node_167","label":"167"},"classes":"deadEnd"}],
       edges: [{"data":{"id":"edge_1_48","source":"node_1","target":"node_48"}},{"data":{"id":"edge_2_116","source":"node_2","target":"node_116"}},{"data":{"id":"edge_2_4","source":"node_2","target":"node_4"}},{"data":{"id":"edge_2_17","source":"node_2","target":"node_17"}},{"data":{"id":"edge_3_34","source":"node_3","target":"node_34"}},{"data":{"id":"edge_3_49","source":"node_3","target":"node_49"}},{"data":{"id":"edge_3_22","source":"node_3","target":"node_22"}},{"data":{"id":"edge_4_13","source":"node_4","target":"node_13"}},{"data":{"id":"edge_4_41","source":"node_4","target":"node_41"}},{"data":{"id":"edge_5_57","source":"node_5","target":"node_57"}},{"data":{"id":"edge_5_87","source":"node_5","target":"node_87"}},{"data":{"id":"edge_6_11","source":"node_6","target":"node_11"}},{"data":{"id":"edge_6_18","source":"node_6","target":"node_18"}},{"data":{"id":"edge_7_156","source":"node_7","target":"node_156"}},{"data":{"id":"edge_7_44","source":"node_7","target":"node_44"}},{"data":{"id":"edge_8_86","source":"node_8","target":"node_86"}},{"data":{"id":"edge_8_19","source":"node_8","target":"node_19"}},{"data":{"id":"edge_8_144","source":"node_8","target":"node_144"}},{"data":{"id":"edge_8_42","source":"node_8","target":"node_42"}},{"data":{"id":"edge_9_84","source":"node_9","target":"node_84"}},{"data":{"id":"edge_9_20","source":"node_9","target":"node_20"}},{"data":{"id":"edge_10_60","source":"node_10","target":"node_60"}},{"data":{"id":"edge_10_46","source":"node_10","target":"node_46"}},{"data":{"id":"edge_11_21","source":"node_11","target":"node_21"}},{"data":{"id":"edge_12_24","source":"node_12","target":"node_24"}},{"data":{"id":"edge_12_36","source":"node_12","target":"node_36"}},{"data":{"id":"edge_12_55","source":"node_12","target":"node_55"}},{"data":{"id":"edge_13_25","source":"node_13","target":"node_25"}},{"data":{"id":"edge_13_53","source":"node_13","target":"node_53"}},{"data":{"id":"edge_14_135","source":"node_14","target":"node_135"}},{"data":{"id":"edge_14_162","source":"node_14","target":"node_162"}},{"data":{"id":"edge_15_39","source":"node_15","target":"node_39"}},{"data":{"id":"edge_15_162","source":"node_15","target":"node_162"}},{"data":{"id":"edge_16_86","source":"node_16","target":"node_86"}},{"data":{"id":"edge_16_19","source":"node_16","target":"node_19"}},{"data":{"id":"edge_16_144","source":"node_16","target":"node_144"}},{"data":{"id":"edge_16_42","source":"node_16","target":"node_42"}},{"data":{"id":"edge_17_38","source":"node_17","target":"node_38"}},{"data":{"id":"edge_17_28","source":"node_17","target":"node_28"}},{"data":{"id":"edge_18_116","source":"node_18","target":"node_116"}},{"data":{"id":"edge_18_6","source":"node_18","target":"node_6"}},{"data":{"id":"edge_19_12","source":"node_19","target":"node_12"}},{"data":{"id":"edge_19_8","source":"node_19","target":"node_8"}},{"data":{"id":"edge_20_75","source":"node_20","target":"node_75"}},{"data":{"id":"edge_20_9","source":"node_20","target":"node_9"}},{"data":{"id":"edge_21_35","source":"node_21","target":"node_35"}},{"data":{"id":"edge_21_50","source":"node_21","target":"node_50"}},{"data":{"id":"edge_22_111","source":"node_22","target":"node_111"}},{"data":{"id":"edge_22_143","source":"node_22","target":"node_143"}},{"data":{"id":"edge_23_47","source":"node_23","target":"node_47"}},{"data":{"id":"edge_23_30","source":"node_23","target":"node_30"}},{"data":{"id":"edge_24_95","source":"node_24","target":"node_95"}},{"data":{"id":"edge_24_130","source":"node_24","target":"node_130"}},{"data":{"id":"edge_24_118","source":"node_24","target":"node_118"}},{"data":{"id":"edge_24_80","source":"node_24","target":"node_80"}},{"data":{"id":"edge_25_52","source":"node_25","target":"node_52"}},{"data":{"id":"edge_25_96","source":"node_25","target":"node_96"}},{"data":{"id":"edge_25_101","source":"node_25","target":"node_101"}},{"data":{"id":"edge_26_72","source":"node_26","target":"node_72"}},{"data":{"id":"edge_26_132","source":"node_26","target":"node_132"}},{"data":{"id":"edge_26_41","source":"node_26","target":"node_41"}},{"data":{"id":"edge_27_135","source":"node_27","target":"node_135"}},{"data":{"id":"edge_27_38","source":"node_27","target":"node_38"}},{"data":{"id":"edge_27_162","source":"node_27","target":"node_162"}},{"data":{"id":"edge_28_2","source":"node_28","target":"node_2"}},{"data":{"id":"edge_28_17","source":"node_28","target":"node_17"}},{"data":{"id":"edge_29_38","source":"node_29","target":"node_38"}},{"data":{"id":"edge_29_40","source":"node_29","target":"node_40"}},{"data":{"id":"edge_30_126","source":"node_30","target":"node_126"}},{"data":{"id":"edge_30_146","source":"node_30","target":"node_146"}},{"data":{"id":"edge_31_113","source":"node_31","target":"node_113"}},{"data":{"id":"edge_31_145","source":"node_31","target":"node_145"}},{"data":{"id":"edge_31_133","source":"node_31","target":"node_133"}},{"data":{"id":"edge_31_32","source":"node_31","target":"node_32"}},{"data":{"id":"edge_32_61","source":"node_32","target":"node_61"}},{"data":{"id":"edge_32_89","source":"node_32","target":"node_89"}},{"data":{"id":"edge_33_16","source":"node_33","target":"node_16"}},{"data":{"id":"edge_34_3","source":"node_34","target":"node_3"}},{"data":{"id":"edge_34_111","source":"node_34","target":"node_111"}},{"data":{"id":"edge_35_50","source":"node_35","target":"node_50"}},{"data":{"id":"edge_36_8","source":"node_36","target":"node_8"}},{"data":{"id":"edge_37_132","source":"node_37","target":"node_132"}},{"data":{"id":"edge_37_41","source":"node_37","target":"node_41"}},{"data":{"id":"edge_38_27","source":"node_38","target":"node_27"}},{"data":{"id":"edge_38_14","source":"node_38","target":"node_14"}},{"data":{"id":"edge_38_54","source":"node_38","target":"node_54"}},{"data":{"id":"edge_38_98","source":"node_38","target":"node_98"}},{"data":{"id":"edge_38_120","source":"node_38","target":"node_120"}},{"data":{"id":"edge_38_64","source":"node_38","target":"node_64"}},{"data":{"id":"edge_38_129","source":"node_38","target":"node_129"}},{"data":{"id":"edge_39_56","source":"node_39","target":"node_56"}},{"data":{"id":"edge_40_5","source":"node_40","target":"node_5"}},{"data":{"id":"edge_40_29","source":"node_40","target":"node_29"}},{"data":{"id":"edge_41_17","source":"node_41","target":"node_17"}},{"data":{"id":"edge_41_4","source":"node_41","target":"node_4"}},{"data":{"id":"edge_41_116","source":"node_41","target":"node_116"}},{"data":{"id":"edge_42_48","source":"node_42","target":"node_48"}},{"data":{"id":"edge_42_16","source":"node_42","target":"node_16"}},{"data":{"id":"edge_43_116","source":"node_43","target":"node_116"}},{"data":{"id":"edge_43_88","source":"node_43","target":"node_88"}},{"data":{"id":"edge_44_71","source":"node_44","target":"node_71"}},{"data":{"id":"edge_44_7","source":"node_44","target":"node_7"}},{"data":{"id":"edge_45_114","source":"node_45","target":"node_114"}},{"data":{"id":"edge_45_91","source":"node_45","target":"node_91"}},{"data":{"id":"edge_46_115","source":"node_46","target":"node_115"}},{"data":{"id":"edge_46_10","source":"node_46","target":"node_10"}},{"data":{"id":"edge_47_167","source":"node_47","target":"node_167"}},{"data":{"id":"edge_48_93","source":"node_48","target":"node_93"}},{"data":{"id":"edge_48_16","source":"node_48","target":"node_16"}},{"data":{"id":"edge_49_143","source":"node_49","target":"node_143"}},{"data":{"id":"edge_50_94","source":"node_50","target":"node_94"}},{"data":{"id":"edge_50_35","source":"node_50","target":"node_35"}},{"data":{"id":"edge_50_117","source":"node_50","target":"node_117"}},{"data":{"id":"edge_51_45","source":"node_51","target":"node_45"}},{"data":{"id":"edge_52_132","source":"node_52","target":"node_132"}},{"data":{"id":"edge_52_41","source":"node_52","target":"node_41"}},{"data":{"id":"edge_53_110","source":"node_53","target":"node_110"}},{"data":{"id":"edge_53_119","source":"node_53","target":"node_119"}},{"data":{"id":"edge_53_37","source":"node_53","target":"node_37"}},{"data":{"id":"edge_54_38","source":"node_54","target":"node_38"}},{"data":{"id":"edge_54_135","source":"node_54","target":"node_135"}},{"data":{"id":"edge_55_24","source":"node_55","target":"node_24"}},{"data":{"id":"edge_57_65","source":"node_57","target":"node_65"}},{"data":{"id":"edge_58_66","source":"node_58","target":"node_66"}},{"data":{"id":"edge_58_148","source":"node_58","target":"node_148"}},{"data":{"id":"edge_58_122","source":"node_58","target":"node_122"}},{"data":{"id":"edge_59_67","source":"node_59","target":"node_67"}},{"data":{"id":"edge_60_68","source":"node_60","target":"node_68"}},{"data":{"id":"edge_60_124","source":"node_60","target":"node_124"}},{"data":{"id":"edge_61_140","source":"node_61","target":"node_140"}},{"data":{"id":"edge_61_69","source":"node_61","target":"node_69"}},{"data":{"id":"edge_61_163","source":"node_61","target":"node_163"}},{"data":{"id":"edge_62_161","source":"node_62","target":"node_161"}},{"data":{"id":"edge_63_127","source":"node_63","target":"node_127"}},{"data":{"id":"edge_64_81","source":"node_64","target":"node_81"}},{"data":{"id":"edge_65_121","source":"node_65","target":"node_121"}},{"data":{"id":"edge_65_73","source":"node_65","target":"node_73"}},{"data":{"id":"edge_66_158","source":"node_66","target":"node_158"}},{"data":{"id":"edge_66_74","source":"node_66","target":"node_74"}},{"data":{"id":"edge_66_107","source":"node_66","target":"node_107"}},{"data":{"id":"edge_67_59","source":"node_67","target":"node_59"}},{"data":{"id":"edge_67_136","source":"node_67","target":"node_136"}},{"data":{"id":"edge_67_123","source":"node_67","target":"node_123"}},{"data":{"id":"edge_68_76","source":"node_68","target":"node_76"}},{"data":{"id":"edge_68_141","source":"node_68","target":"node_141"}},{"data":{"id":"edge_69_89","source":"node_69","target":"node_89"}},{"data":{"id":"edge_69_99","source":"node_69","target":"node_99"}},{"data":{"id":"edge_70_161","source":"node_70","target":"node_161"}},{"data":{"id":"edge_71_127","source":"node_71","target":"node_127"}},{"data":{"id":"edge_71_63","source":"node_71","target":"node_63"}},{"data":{"id":"edge_72_56","source":"node_72","target":"node_56"}},{"data":{"id":"edge_73_121","source":"node_73","target":"node_121"}},{"data":{"id":"edge_73_138","source":"node_73","target":"node_138"}},{"data":{"id":"edge_74_66","source":"node_74","target":"node_66"}},{"data":{"id":"edge_75_123","source":"node_75","target":"node_123"}},{"data":{"id":"edge_75_67","source":"node_75","target":"node_67"}},{"data":{"id":"edge_76_164","source":"node_76","target":"node_164"}},{"data":{"id":"edge_76_134","source":"node_76","target":"node_134"}},{"data":{"id":"edge_76_149","source":"node_76","target":"node_149"}},{"data":{"id":"edge_78_161","source":"node_78","target":"node_161"}},{"data":{"id":"edge_79_7","source":"node_79","target":"node_7"}},{"data":{"id":"edge_79_31","source":"node_79","target":"node_31"}},{"data":{"id":"edge_80_24","source":"node_80","target":"node_24"}},{"data":{"id":"edge_81_109","source":"node_81","target":"node_109"}},{"data":{"id":"edge_81_135","source":"node_81","target":"node_135"}},{"data":{"id":"edge_82_157","source":"node_82","target":"node_157"}},{"data":{"id":"edge_82_162","source":"node_82","target":"node_162"}},{"data":{"id":"edge_83_18","source":"node_83","target":"node_18"}},{"data":{"id":"edge_83_100","source":"node_83","target":"node_100"}},{"data":{"id":"edge_84_116","source":"node_84","target":"node_116"}},{"data":{"id":"edge_84_20","source":"node_84","target":"node_20"}},{"data":{"id":"edge_84_131","source":"node_84","target":"node_131"}},{"data":{"id":"edge_85_113","source":"node_85","target":"node_113"}},{"data":{"id":"edge_85_133","source":"node_85","target":"node_133"}},{"data":{"id":"edge_85_32","source":"node_85","target":"node_32"}},{"data":{"id":"edge_85_145","source":"node_85","target":"node_145"}},{"data":{"id":"edge_86_3","source":"node_86","target":"node_3"}},{"data":{"id":"edge_86_111","source":"node_86","target":"node_111"}},{"data":{"id":"edge_87_29","source":"node_87","target":"node_29"}},{"data":{"id":"edge_87_5","source":"node_87","target":"node_5"}},{"data":{"id":"edge_88_159","source":"node_88","target":"node_159"}},{"data":{"id":"edge_88_116","source":"node_88","target":"node_116"}},{"data":{"id":"edge_89_133","source":"node_89","target":"node_133"}},{"data":{"id":"edge_89_32","source":"node_89","target":"node_32"}},{"data":{"id":"edge_89_113","source":"node_89","target":"node_113"}},{"data":{"id":"edge_89_145","source":"node_89","target":"node_145"}},{"data":{"id":"edge_90_84","source":"node_90","target":"node_84"}},{"data":{"id":"edge_90_131","source":"node_90","target":"node_131"}},{"data":{"id":"edge_91_12","source":"node_91","target":"node_12"}},{"data":{"id":"edge_91_45","source":"node_91","target":"node_45"}},{"data":{"id":"edge_92_44","source":"node_92","target":"node_44"}},{"data":{"id":"edge_92_156","source":"node_92","target":"node_156"}},{"data":{"id":"edge_93_33","source":"node_93","target":"node_33"}},{"data":{"id":"edge_93_48","source":"node_93","target":"node_48"}},{"data":{"id":"edge_94_100","source":"node_94","target":"node_100"}},{"data":{"id":"edge_94_18","source":"node_94","target":"node_18"}},{"data":{"id":"edge_95_8","source":"node_95","target":"node_8"}},{"data":{"id":"edge_95_45","source":"node_95","target":"node_45"}},{"data":{"id":"edge_96_132","source":"node_96","target":"node_132"}},{"data":{"id":"edge_96_41","source":"node_96","target":"node_41"}},{"data":{"id":"edge_97_132","source":"node_97","target":"node_132"}},{"data":{"id":"edge_97_41","source":"node_97","target":"node_41"}},{"data":{"id":"edge_97_26","source":"node_97","target":"node_26"}},{"data":{"id":"edge_98_109","source":"node_98","target":"node_109"}},{"data":{"id":"edge_98_38","source":"node_98","target":"node_38"}},{"data":{"id":"edge_98_135","source":"node_98","target":"node_135"}},{"data":{"id":"edge_99_10","source":"node_99","target":"node_10"}},{"data":{"id":"edge_99_115","source":"node_99","target":"node_115"}},{"data":{"id":"edge_100_42","source":"node_100","target":"node_42"}},{"data":{"id":"edge_100_86","source":"node_100","target":"node_86"}},{"data":{"id":"edge_100_19","source":"node_100","target":"node_19"}},{"data":{"id":"edge_100_144","source":"node_100","target":"node_144"}},{"data":{"id":"edge_101_96","source":"node_101","target":"node_96"}},{"data":{"id":"edge_102_7","source":"node_102","target":"node_7"}},{"data":{"id":"edge_102_31","source":"node_102","target":"node_31"}},{"data":{"id":"edge_103_146","source":"node_103","target":"node_146"}},{"data":{"id":"edge_103_92","source":"node_103","target":"node_92"}},{"data":{"id":"edge_105_149","source":"node_105","target":"node_149"}},{"data":{"id":"edge_106_136","source":"node_106","target":"node_136"}},{"data":{"id":"edge_108_112","source":"node_108","target":"node_112"}},{"data":{"id":"edge_108_87","source":"node_108","target":"node_87"}},{"data":{"id":"edge_109_157","source":"node_109","target":"node_157"}},{"data":{"id":"edge_109_162","source":"node_109","target":"node_162"}},{"data":{"id":"edge_109_82","source":"node_109","target":"node_82"}},{"data":{"id":"edge_110_97","source":"node_110","target":"node_97"}},{"data":{"id":"edge_111_86","source":"node_111","target":"node_86"}},{"data":{"id":"edge_111_19","source":"node_111","target":"node_19"}},{"data":{"id":"edge_111_144","source":"node_111","target":"node_144"}},{"data":{"id":"edge_111_42","source":"node_111","target":"node_42"}},{"data":{"id":"edge_112_32","source":"node_112","target":"node_32"}},{"data":{"id":"edge_112_133","source":"node_112","target":"node_133"}},{"data":{"id":"edge_112_145","source":"node_112","target":"node_145"}},{"data":{"id":"edge_112_113","source":"node_112","target":"node_113"}},{"data":{"id":"edge_113_159","source":"node_113","target":"node_159"}},{"data":{"id":"edge_113_85","source":"node_113","target":"node_85"}},{"data":{"id":"edge_114_75","source":"node_114","target":"node_75"}},{"data":{"id":"edge_114_154","source":"node_114","target":"node_154"}},{"data":{"id":"edge_115_61","source":"node_115","target":"node_61"}},{"data":{"id":"edge_115_99","source":"node_115","target":"node_99"}},{"data":{"id":"edge_116_2","source":"node_116","target":"node_2"}},{"data":{"id":"edge_116_84","source":"node_116","target":"node_84"}},{"data":{"id":"edge_116_6","source":"node_116","target":"node_6"}},{"data":{"id":"edge_116_88","source":"node_116","target":"node_88"}},{"data":{"id":"edge_117_83","source":"node_117","target":"node_83"}},{"data":{"id":"edge_117_100","source":"node_117","target":"node_100"}},{"data":{"id":"edge_117_18","source":"node_117","target":"node_18"}},{"data":{"id":"edge_118_8","source":"node_118","target":"node_8"}},{"data":{"id":"edge_119_110","source":"node_119","target":"node_110"}},{"data":{"id":"edge_120_38","source":"node_120","target":"node_38"}},{"data":{"id":"edge_120_135","source":"node_120","target":"node_135"}},{"data":{"id":"edge_121_147","source":"node_121","target":"node_147"}},{"data":{"id":"edge_121_108","source":"node_121","target":"node_108"}},{"data":{"id":"edge_121_138","source":"node_121","target":"node_138"}},{"data":{"id":"edge_122_74","source":"node_122","target":"node_74"}},{"data":{"id":"edge_122_66","source":"node_122","target":"node_66"}},{"data":{"id":"edge_123_154","source":"node_123","target":"node_154"}},{"data":{"id":"edge_124_76","source":"node_124","target":"node_76"}},{"data":{"id":"edge_125_104","source":"node_125","target":"node_104"}},{"data":{"id":"edge_125_77","source":"node_125","target":"node_77"}},{"data":{"id":"edge_125_69","source":"node_125","target":"node_69"}},{"data":{"id":"edge_126_62","source":"node_126","target":"node_62"}},{"data":{"id":"edge_126_78","source":"node_126","target":"node_78"}},{"data":{"id":"edge_126_139","source":"node_126","target":"node_139"}},{"data":{"id":"edge_126_150","source":"node_126","target":"node_150"}},{"data":{"id":"edge_127_102","source":"node_127","target":"node_102"}},{"data":{"id":"edge_127_79","source":"node_127","target":"node_79"}},{"data":{"id":"edge_127_63","source":"node_127","target":"node_63"}},{"data":{"id":"edge_129_135","source":"node_129","target":"node_135"}},{"data":{"id":"edge_129_38","source":"node_129","target":"node_38"}},{"data":{"id":"edge_129_142","source":"node_129","target":"node_142"}},{"data":{"id":"edge_130_45","source":"node_130","target":"node_45"}},{"data":{"id":"edge_131_60","source":"node_131","target":"node_60"}},{"data":{"id":"edge_131_90","source":"node_131","target":"node_90"}},{"data":{"id":"edge_132_155","source":"node_132","target":"node_155"}},{"data":{"id":"edge_132_166","source":"node_132","target":"node_166"}},{"data":{"id":"edge_133_57","source":"node_133","target":"node_57"}},{"data":{"id":"edge_133_112","source":"node_133","target":"node_112"}},{"data":{"id":"edge_134_76","source":"node_134","target":"node_76"}},{"data":{"id":"edge_134_149","source":"node_134","target":"node_149"}},{"data":{"id":"edge_135_157","source":"node_135","target":"node_157"}},{"data":{"id":"edge_135_162","source":"node_135","target":"node_162"}},{"data":{"id":"edge_135_82","source":"node_135","target":"node_82"}},{"data":{"id":"edge_136_154","source":"node_136","target":"node_154"}},{"data":{"id":"edge_136_9","source":"node_136","target":"node_9"}},{"data":{"id":"edge_136_59","source":"node_136","target":"node_59"}},{"data":{"id":"edge_137_56","source":"node_137","target":"node_56"}},{"data":{"id":"edge_138_121","source":"node_138","target":"node_121"}},{"data":{"id":"edge_139_161","source":"node_139","target":"node_161"}},{"data":{"id":"edge_140_69","source":"node_140","target":"node_69"}},{"data":{"id":"edge_140_151","source":"node_140","target":"node_151"}},{"data":{"id":"edge_141_105","source":"node_141","target":"node_105"}},{"data":{"id":"edge_141_76","source":"node_141","target":"node_76"}},{"data":{"id":"edge_142_129","source":"node_142","target":"node_129"}},{"data":{"id":"edge_143_13","source":"node_143","target":"node_13"}},{"data":{"id":"edge_143_155","source":"node_143","target":"node_155"}},{"data":{"id":"edge_144_11","source":"node_144","target":"node_11"}},{"data":{"id":"edge_144_100","source":"node_144","target":"node_100"}},{"data":{"id":"edge_145_71","source":"node_145","target":"node_71"}},{"data":{"id":"edge_145_31","source":"node_145","target":"node_31"}},{"data":{"id":"edge_146_23","source":"node_146","target":"node_23"}},{"data":{"id":"edge_146_30","source":"node_146","target":"node_30"}},{"data":{"id":"edge_147_87","source":"node_147","target":"node_87"}},{"data":{"id":"edge_147_112","source":"node_147","target":"node_112"}},{"data":{"id":"edge_148_66","source":"node_148","target":"node_66"}},{"data":{"id":"edge_148_74","source":"node_148","target":"node_74"}},{"data":{"id":"edge_149_90","source":"node_149","target":"node_90"}},{"data":{"id":"edge_149_46","source":"node_149","target":"node_46"}},{"data":{"id":"edge_150_126","source":"node_150","target":"node_126"}},{"data":{"id":"edge_151_125","source":"node_151","target":"node_125"}},{"data":{"id":"edge_151_69","source":"node_151","target":"node_69"}},{"data":{"id":"edge_153_15","source":"node_153","target":"node_15"}},{"data":{"id":"edge_153_162","source":"node_153","target":"node_162"}},{"data":{"id":"edge_154_91","source":"node_154","target":"node_91"}},{"data":{"id":"edge_154_114","source":"node_154","target":"node_114"}},{"data":{"id":"edge_155_3","source":"node_155","target":"node_3"}},{"data":{"id":"edge_155_143","source":"node_155","target":"node_143"}},{"data":{"id":"edge_156_126","source":"node_156","target":"node_126"}},{"data":{"id":"edge_156_92","source":"node_156","target":"node_92"}},{"data":{"id":"edge_157_153","source":"node_157","target":"node_153"}},{"data":{"id":"edge_157_162","source":"node_157","target":"node_162"}},{"data":{"id":"edge_158_137","source":"node_158","target":"node_137"}},{"data":{"id":"edge_158_43","source":"node_158","target":"node_43"}},{"data":{"id":"edge_158_85","source":"node_158","target":"node_85"}},{"data":{"id":"edge_159_58","source":"node_159","target":"node_58"}},{"data":{"id":"edge_161_70","source":"node_161","target":"node_70"}},{"data":{"id":"edge_161_103","source":"node_161","target":"node_103"}},{"data":{"id":"edge_162_40","source":"node_162","target":"node_40"}},{"data":{"id":"edge_163_140","source":"node_163","target":"node_140"}},{"data":{"id":"edge_164_149","source":"node_164","target":"node_149"}},{"data":{"id":"edge_166_13","source":"node_166","target":"node_13"}},{"data":{"id":"edge_166_155","source":"node_166","target":"node_155"}}]
     };
     
-    // Function to load script and initialize Cytoscape
-    function loadCytoscape() {
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js';
-      script.integrity = 'sha512-gEWKnYYa1/1c3jOuT9PR7NxiVI1bwn02DeJGsl+lMVQ1fWMNvtjkjxIApTdbJ/wcDjQmbf+McWahXwipdC9dGA==';
-      script.crossOrigin = 'anonymous';
-      script.referrerPolicy = 'no-referrer';
+    // Initialize visualization when page loads
+    window.onload = function() {
+      // Check if Cytoscape loaded
+      if (typeof cytoscape === 'undefined') {
+        document.getElementById('loading').innerHTML = 
+          'Error: Cytoscape library failed to load. Please download this file and open it locally.';
+        return;
+      }
       
-      script.onload = function() {
-        // Hide loading message
-        document.getElementById('loading').style.display = 'none';
-        
-        // Initialize Cytoscape
-        const cy = cytoscape({
-          container: document.getElementById('cy'),
-          elements: graphElements,
-          style: [
-            {
-              selector: 'node',
-              style: {
-                'label': 'data(label)',
-                'background-color': '#666',
-                'color': '#fff',
-                'text-valign': 'center',
-                'text-halign': 'center',
-                'width': '40px',
-                'height': '40px',
-                'font-size': '12px'
-              }
-            },
-            {
-              selector: 'edge',
-              style: {
-                'width': 2,
-                'line-color': '#999',
-                'target-arrow-color': '#999',
-                'target-arrow-shape': 'triangle',
-                'curve-style': 'bezier'
-              }
-            },
-            {
-              selector: '.deadEnd',
-              style: {
-                'background-color': 'red'
-              }
-            },
-            {
-              selector: '.unreachable',
-              style: {
-                'background-color': 'orange'
-              }
-            },
-            {
-              selector: '.singleEntry',
-              style: {
-                'background-color': 'lightblue'
-              }
-            }
-          ],
-          layout: {
-            name: 'cose',
-            nodeDimensionsIncludeLabels: true,
-            randomize: true,
-            componentSpacing: 100,
-            nodeRepulsion: 6000,
-            nodeOverlap: 20,
-            idealEdgeLength: 100,
-            edgeElasticity: 100,
-            nestingFactor: 5,
-            gravity: 80,
-            numIter: 1000,
-            initialTemp: 200,
-            coolingFactor: 0.95,
-            minTemp: 1.0
-          }
-        });
-      };
+      // Hide loading message
+      document.getElementById('loading').style.display = 'none';
       
-      script.onerror = function() {
-        document.getElementById('loading').innerHTML = 'Error loading visualization library. Please try a different browser or download the file to view locally.';
-      };
-      
-      document.head.appendChild(script);
-    }
-    
-    // Initialize when the page loads
-    window.onload = loadCytoscape;
+      // Initialize Cytoscape
+      const cy = cytoscape({
+        container: document.getElementById('cy'),
+        elements: window.graphElements,
+        style: [
+          // Your existing style definitions
+        ],
+        layout: {
+          // Your existing layout options
+        }
+      });
+    };
   </script>
 </body>
 </html>

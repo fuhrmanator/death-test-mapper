@@ -32,8 +32,8 @@ There are two main visualizations generated:
   <img src="output/dungeon_map.png" alt="Death Test Dungeon Map PNG" width="100%">
 
 <p>HTML Version (Interactive):</p>
-<a href="https://htmlpreview.github.io/?https://github.com/fuhrmanator/death-test-mapper/blob/main/output/dungeon_map.html">Interactive Visualization</a>
-<br><small>(If visualization doesn't load in preview, try downloading the HTML file and opening it locally)</small>
+<p>Option 1: <a href="https://htmlpreview.github.io/?https://github.com/fuhrmanator/death-test-mapper/blob/main/output/dungeon_map.html">View with HTMLPreview</a> (may not work in all browsers)</p>
+<p>Option 2: <a href="https://github.com/fuhrmanator/death-test-mapper/blob/main/output/dungeon_map.html">Download the HTML file</a> and open it locally for the best experience</p>
 
   <!-- If you have the room map specifically -->
   <p>Room Connections:</p>
