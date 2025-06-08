@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Death Test Adventure</title>
+    <style>
+        body {
+            font-family: 'Bookman Old Style', Georgia, serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f5e9;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #8b0000;
+            padding-bottom: 10px;
+        }
+        h1 {
+            color: #8b0000;
+        }
+        #paragraph-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            min-height: 200px;
+        }
+        .paragraph-id {
+            font-weight: bold;
+            font-size: 1.4em;
+            color: #8b0000;
+            margin-bottom: 15px;
+        }
+        .paragraph-text {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        .choices {
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        .choice {
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            padding: 8px 15px;
+            background-color: #e0dbd1;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .choice:hover {
+            background-color: #c9c3b0;
+        }
+        .navigation {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .history {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f1efe8;
+            border-radius: 4px;
+        }
+        .history-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .history-item {
+            display: inline-block;
+            margin: 2px 5px 2px 0;
+            padding: 2px 6px;
+            background-color: #e0dbd1;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .history-item:hover {
+            background-color: #c9c3b0;
+        }
+        .back-button {
+            padding: 8px 15px;
+            background-color: #8b0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .dead-end {
+            color: red;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        #loading {
+            text-align: center;
+            padding: 20px;
+        }
+        .special-choice {
+            background-color: #ffe0c3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Death Test Adventure</h1>
+        <p>An interactive hypertext version of the classic adventure</p>
+    </header>
+
+    <div id="loading">Loading adventure data...</div>
+    
+    <div id="adventure-content" style="display: none;">
+        <div id="paragraph-container">
+            <div class="paragraph-id" id="paragraph-id"></div>
+            <div class="paragraph-text" id="paragraph-text"></div>
+            <div class="choices" id="choices"></div>
+            <div id="dead-end-message" class="dead-end" style="display: none;">
+                This is a dead end. Your adventure ends here.
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button id="back-button" class="back-button">← Go Back</button>
+            <div>
+                <input type="number" id="goto-input" placeholder="Enter paragraph #" min="1" max="167">
+                <button id="goto-button">Go</button>
+            </div>
+        </div>
+        
+        <div class="history">
+            <div class="history-title">Your Path:</div>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+    <script>
+        let paragraphs = [];
+        let history = [];
+        let currentParagraphId = 1;
+
+        // Load paragraphs from JSON file
+        fetch('output/paragraphs.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                paragraphs = data;
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('adventure-content').style.display = 'block';
+                showParagraph(1); // Start with paragraph 1
+            })
+            .catch(error => {
+                console.error('Error loading paragraphs:', error);
+                document.getElementById('loading').textContent = 'Error loading adventure data. Please try again.';
+            });
+
+        // Display a paragraph by ID
+        function showParagraph(id) {
+            // Find the paragraph
+            const paragraph = paragraphs.find(p => p.id === parseInt(id));
+            if (!paragraph) {
+                alert(`Paragraph ${id} not found!`);
+                return;
+            }
+
+            // Update history
+            if (currentParagraphId !== id) {
+                history.push(currentParagraphId);
+                updateHistory();
+            }
+            
+            // Update current paragraph
+            currentParagraphId = id;
+            
+            // Update display
+            document.getElementById('paragraph-id').textContent = `Paragraph ${paragraph.id}`;
+            document.getElementById('paragraph-text').textContent = paragraph.text;
+            
+            // Generate choices
+            const choicesElement = document.getElementById('choices');
+            choicesElement.innerHTML = '';
+            
+            if (paragraph.choices && paragraph.choices.length > 0) {
+                paragraph.choices.forEach(choice => {
+                    const choiceElement = document.createElement('a');
+                    choiceElement.className = 'choice';
+                    choiceElement.textContent = `Go to ${choice.targetId}`;
+                    choiceElement.href = '#';
+                    choiceElement.onclick = function(e) {
+                        e.preventDefault();
+                        showParagraph(choice.targetId);
+                    };
+                    choicesElement.appendChild(choiceElement);
+                });
+                document.getElementById('dead-end-message').style.display = 'none';
+            } else {
+                document.getElementById('dead-end-message').style.display = 'block';
+            }
+        }
+
+        // Update history display
+        function updateHistory() {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+            
+            // Display up to the last 10 visited paragraphs
+            const recentHistory = history.slice(-10);
+            
+            recentHistory.forEach(id => {
+                const historyItem = document.createElement('span');
+                historyItem.className = 'history-item';
+                historyItem.textContent = id;
+                historyItem.onclick = function() {
+                    showParagraph(id);
+                    // Remove all history after this point
+                    const index = history.indexOf(parseInt(id));
+                    if (index !== -1) {
+                        history = history.slice(0, index);
+                    }
+                    updateHistory();
+                };
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // Set up event listeners
+        document.getElementById('back-button').addEventListener('click', function() {
+            if (history.length > 0) {
+                const previousId = history.pop();
+                showParagraph(previousId);
+                updateHistory();
+            } else {
+                alert('You are at the beginning of your adventure!');
+            }
+        });
+
+        document.getElementById('goto-button').addEventListener('click', function() {
+            const input = document.getElementById('goto-input');
+            const id = parseInt(input.value);
+            
+            if (id && id >= 1 && id <= 167) {
+                showParagraph(id);
+                input.value = '';
+            } else {
+                alert('Please enter a valid paragraph number (1-167)');
+            }
+        });
+
+        // Allow Enter key in the input field
+        document.getElementById('goto-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('goto-button').click();
+            }
+        });
+    </script>
+</body>
+</html>
